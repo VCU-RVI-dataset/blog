@@ -82,15 +82,6 @@ body_T_cam0: !!opencv-matrix # Timu2c_1 Tu2c
       -0.999996, -0.0019327, -0.00223606, 0.015075,
       0.00223829, -0.00114906, -0.999997, -0.0110795,
       0, 0, 0, 1]
-
-body_T_cam1: !!opencv-matrix # Timu2c_2, Tc1_2_c2 is a virtual transformation [I,t] t = [0.1, 0, 0], note "mbf" in estimator_dpt.cpp
-   rows: 4
-   cols: 4
-   dt: d
-   data: [0.00193013, -0.999997, 0.00115338, -0.007977467,
-      -0.999996, -0.0019327, -0.00223606, -0.0849246,
-      0.00223829, -0.00114906, -0.999997, -0.010855671,
-      0, 0, 0, 1]
 ```
 In addition, we also recorded a data sequence by moving the SC around an Aprilgrid target about 3 minutes, and we employed the Kalibr toolbox [<sup>3</sup>](#refer-anchor-3) to estimate the extrinsic transformation matrix. However, its output is worse than that provided by SC SDK; therefore, we used the SDK provided  transformation matrix in our evaluation.   
 
