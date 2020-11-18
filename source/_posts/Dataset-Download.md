@@ -4,16 +4,6 @@ date: 2020-08-14 15:10:57
 tags: [Calibration, Dataset]
 ---
 
-##  Calibration
-
-Except for evaluation sequences, the calibration data sequences are made available, allowing users to perform their own calibration. Three sequences are provided in the dataset:
-
-• **camera**: sequence with slow-motion viewing a grid of AprilTags for camera intrinsics calibration. 
-
-• **camera-imu**: sequence with fast motion viewing a grid of AprilTags for camera-imu extrinsic calibration. [camera-imu](https://drive.google.com/drive/folders/1TzVq_GvnhUQSWwMMWM0rTgv4tmiJj1OI?usp=sharing)
-
-• **hand-eye**: sequence with slow-motion viewing a checkboard for camera-marker extrinsic calibration. [hand-eye](https://drive.google.com/drive/folders/1diqBgnHguA5lumcUvXhmcOVzg-KTo2kw?usp=sharing)
-
 ## Handheld
 
 According to the data recording conditions and environments, the data sequences can be divided into the following categories:
@@ -31,6 +21,10 @@ For the data sequences recorded with the mobile robot, they are captured in the 
 • **bumper**: drive the robot along the bumpers to generate 6 DoF movements, producing more variance to the IMU measurements for initialization purpose; then drive it around the whole area. [lab1](https://drive.google.com/file/d/19asRb3Q3xnpXkRXwGJgQctbDmsGZDz-n/view?usp=sharing) [lab2](https://drive.google.com/file/d/1eSRcUt7giNrVRqyWOMJx-XvtaiWkmiTF/view?usp=sharing) [lab3](https://drive.google.com/file/d/1yEuyQar0fVJHLvcVxXxMVPQRCj3v7sud/view?usp=sharing) [lab4](https://drive.google.com/file/d/1rl8MCU3iqoaOqUatckmcA9bRstcVPrHz/view?usp=sharing) [lab5](https://drive.google.com/file/d/1pGmK0PoMPt6pFZrI6oa_on0ZNw6DFWDn/view?usp=sharing) [corridor1](https://drive.google.com/file/d/1_0UkvP1bafkZQn5UJG0xzRlQNY_Iyvx2/view?usp=sharing) [corridor2](https://drive.google.com/file/d/1SdzCdVj85VwI9eMTKAu1QFXljleQ-DGc/view?usp=sharing) 
 
 ## Download
+Please use the reference below if you use the benchmark dataset for evaluation. 
+
+- H. Zhang, L. Jin, C. Ye, "The VCU-RVI Benchmark: Evaluating Visual Inertial Odometry for Indoor Navigation Applications with an RGB-D Camera," in Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems, Las Vegas, USA, 2020.
+
 
 | Dataset         	| ROS bag | Ground Truth | Comment |
 | :---------------- | ------- | ------------ | :------ |
@@ -76,9 +70,37 @@ For the data sequences recorded with the mobile robot, they are captured in the 
 | calibration-01 | [camera-imu](https://drive.google.com/drive/folders/1TzVq_GvnhUQSWwMMWM0rTgv4tmiJj1OI?usp=sharing) | --------- | Dataset for extrinsic calibration |
 | calibration-02 | [hand-eye](https://drive.google.com/drive/folders/1diqBgnHguA5lumcUvXhmcOVzg-KTo2kw?usp=sharing) | --------- | Dataset for hand-eye calibration |
 
+##  Calibration
 
+The extrinsic transformation matrix between the coordinate systems of the color camera and the IMU can be obtained from the Structure Core SDK, and it is shown below. 
+```yaml
+body_T_cam0: !!opencv-matrix # Timu2c_1 Tu2c
+   rows: 4
+   cols: 4
+   dt: d
+   data: [0.00193013, -0.999997, 0.00115338, -0.00817048,
+      -0.999996, -0.0019327, -0.00223606, 0.015075,
+      0.00223829, -0.00114906, -0.999997, -0.0110795,
+      0, 0, 0, 1]
 
+body_T_cam1: !!opencv-matrix # Timu2c_2, Tc1_2_c2 is a virtual transformation [I,t] t = [0.1, 0, 0], note "mbf" in estimator_dpt.cpp
+   rows: 4
+   cols: 4
+   dt: d
+   data: [0.00193013, -0.999997, 0.00115338, -0.007977467,
+      -0.999996, -0.0019327, -0.00223606, -0.0849246,
+      0.00223829, -0.00114906, -0.999997, -0.010855671,
+      0, 0, 0, 1]
+```
+In addition, we also recorded a data sequence by moving the SC around an Aprilgrid target about 3 minutes, and we employed the Kalibr toolbox [<sup>3</sup>](#refer-anchor-3) to estimate the extrinsic transformation matrix. However, its output is worse than that provided by SC SDK; therefore, we used the SDK provided  transformation matrix in our evaluation.   
 
+To allow users to test their calibration algorithms, the calibration data sequences are made available as well. Three data sequences are provided in the dataset:
+
+• **camera**: sequence with slow-motion viewing a grid of AprilTags for camera intrinsics calibration. 
+
+• **camera-imu**: sequence with fast motion viewing a grid of AprilTags for camera-imu extrinsic calibration. [camera-imu](https://drive.google.com/drive/folders/1TzVq_GvnhUQSWwMMWM0rTgv4tmiJj1OI?usp=sharing)
+
+• **hand-eye**: sequence with slow-motion viewing a checkboard for camera-marker extrinsic calibration. [hand-eye](https://drive.google.com/drive/folders/1diqBgnHguA5lumcUvXhmcOVzg-KTo2kw?usp=sharing)
 
 
 ## References:
@@ -90,3 +112,7 @@ For the data sequences recorded with the mobile robot, they are captured in the 
 <div id="refer-anchor-2"></div>
 
 - [2]: Tong Qin, Peiliang Li, and Shaojie Shen, “Vins-mono: A robust and versatile monocular visual-inertial state estimator,” IEEE Transactions on Robotics, 34(4):1004–1020, 2018.
+
+<div id="refer-anchor-3"></div>
+
+- [3]: Paul Furgale, Joern Rehder, Roland Siegwart (2013). Unified Temporal and Spatial Calibration for Multi-Sensor Systems. In Proceedings of the IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS), Tokyo, Japan.
